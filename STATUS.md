@@ -10,7 +10,7 @@ Updated / 更新日期: 2026-09-16
 - Build passed with ESP-IDF 5.3.2, ESP-SR 2.5.3 and ESP-DL 3.3.10. Application: 2,033,808 bytes, about 3% partition space remaining. / 编译通过，应用为 2,033,808 字节，分区剩余约 3%。
 - Application flashed to the connected board and flash hash verified. Existing models and partitions were unchanged. / 应用已烧录并校验，模型与分区未更改。
 - Serial boot confirmed v1.1, LCD initialization, both models, five commands and microphone READY. / 串口确认 v1.1 启动、LCD 初始化、双模型、五条命令和麦克风就绪。
-- **Pending:** user confirmation and serial evidence of multiple commands after a single wake, timer reset after commands, 15-second idle exit and re-wake. These are not yet marked hardware-verified. / **待验证：** 单次唤醒多命令、命令后计时重置、15 秒无命令退出及再次唤醒；尚未标为实机通过。
+- **Hardware verified:** one wake at 21058 ms, then show green (32078), show red (36338), show blue (42798), next page (46698), and go home (49008), with no further wake. Idle exit at 64038 ms was 15.03 seconds after the final command. User confirmed the visible behavior and timeout. Re-wake after timeout remains untested in this run. / **实机通过：** 一次唤醒后连续执行全部五条命令，无需再次唤醒；最后命令后 15.03 秒退出。用户确认屏幕行为及超时正常。本轮未验证超时后再次唤醒。
 
 ## Previous single-command baseline / 上一版单命令基线
 

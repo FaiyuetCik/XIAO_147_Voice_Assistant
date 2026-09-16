@@ -62,7 +62,7 @@ Replace `COM33` with your board's serial port (for example `/dev/ttyACM0` on Lin
 
 Use a **full `flash`**, not only `app-flash`, on first installation or after changing models/partitions. The model partition must be programmed along with the application. Flashing replaces firmware and may overwrite existing board data; back up anything needed first.
 
-The custom partition table reserves 2 MB for the application and 4 MB for models. The tested application is 2,033,712 bytes (only about 3% application space remains), and its model pack is 3,052,231 bytes. Before substantial feature additions, enlarge the application partition and reflash the relocated model partition.
+The custom partition table reserves 2 MB for the application and 4 MB for models. The tested application is 2,033,808 bytes (only about 3% application space remains), and its model pack is 3,052,231 bytes. Before substantial feature additions, enlarge the application partition and reflash the relocated model partition.
 
 ### Source layout and customization
 
@@ -81,7 +81,7 @@ To change commands, update the vocabulary in `main/main.c`, command IDs in `comp
 
 ### Validation and troubleshooting
 
-The previous single-command version was hardware-verified for all five commands, LCD text/colors, page navigation, return home and its six-second timeout. See STATUS.md for v1.1 continuous-session validation; these earlier tests do not validate the new timeout. Serial logs also recorded all five actions in one continuous boot after the runtime fix. These are functional checks, not a measured accuracy benchmark; noise, distance and pronunciation can affect recognition.
+The previous single-command version was hardware-verified for all five commands, LCD text/colors, page navigation, return home and its six-second timeout. v1.1 was additionally verified with all five commands after one wake, and a 15.03-second exit after the final command; the owner confirmed the display behavior and timeout. See STATUS.md for details. Serial logs also recorded all five actions in one continuous boot after the runtime fix. These are functional checks, not a measured accuracy benchmark; noise, distance and pronunciation can affect recognition.
 
 - No response: wait for startup to finish, say the wake phrase first, and do not speak the command until `LISTENING` appears.
 - `Missing model` / `Model error`: check model selections and perform a full flash.
@@ -146,7 +146,7 @@ idf.py -p COM33 flash monitor
 
 首次安装、更换模型或分区后，必须完整执行 **`flash`**，不要只执行 `app-flash`，否则模型分区可能缺失或不匹配。烧录会替换固件，并可能覆盖板上已有数据，请提前备份。
 
-当前分区为应用 2 MB、模型 4 MB。已测试应用大小为 2,033,712 字节，应用分区仅剩约 3%；模型包为 3,052,231 字节。增加较多功能前应扩大应用分区，并重新烧录移动后的模型分区。
+当前分区为应用 2 MB、模型 4 MB。已测试应用大小为 2,033,808 字节，应用分区仅剩约 3%；模型包为 3,052,231 字节。增加较多功能前应扩大应用分区，并重新烧录移动后的模型分区。
 
 ### 代码结构与修改命令
 
@@ -161,7 +161,7 @@ idf.py -p COM33 flash monitor
 
 ### 实测与排查
 
-上一版单命令模式已通过实机确认：五条命令、文字、色块、切页、返回主页和 6 秒超时均正常。v1.1 连续会话的验证状态见 STATUS.md，旧版测试不代表新版 15 秒超时已通过验证。修复后的串口日志也在同一次连续运行中记录了全部五条命令执行。这是功能验证，不是准确率测试；噪声、距离和发音仍会影响识别。
+上一版单命令模式已通过实机确认：五条命令、文字、色块、切页、返回主页和 6 秒超时均正常。v1.1 另已实测一次唤醒连续执行五条命令，并在最后命令后 15.03 秒退出；用户确认屏幕与超时正常，详细记录见 STATUS.md。修复后的串口日志也在同一次连续运行中记录了全部五条命令执行。这是功能验证，不是准确率测试；噪声、距离和发音仍会影响识别。
 
 - 没有响应：等待启动完成，先唤醒，看到 `LISTENING` 后再说命令。
 - 出现 `Missing model` / `Model error`：检查模型配置，完整烧录。
