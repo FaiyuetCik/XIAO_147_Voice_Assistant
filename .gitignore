@@ -1,0 +1,14 @@
+/build*/
+/managed_components/
+/sdkconfig.old
+*.log
+*.bin
+*.elf
+*.map
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+.env
+.env.*
