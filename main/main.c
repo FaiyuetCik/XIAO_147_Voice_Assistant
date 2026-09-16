@@ -20,6 +20,7 @@ static const esp_wn_iface_t *wn;
 static esp_mn_iface_t *mn;
 static model_iface_data_t *wake_data,*command_data;
 static int wake_chunk,command_chunk;
+static const int64_t idle_timeout_us=15000000;
 
 static void recognition_task(void *arg)
 {
@@ -55,8 +56,8 @@ static void recognition_task(void *arg)
         if (!listening) {
             if (wake_state==WAKENET_DETECTED) {
                 ++wake_count; mn->clean(command_data);
-                listening=true; deadline=esp_timer_get_time()+6000000;
-                ESP_LOGI(TAG,"Wake word detected: Hi ESP (#%u), listening for 6 seconds",wake_count);
+                listening=true; deadline=esp_timer_get_time()+idle_timeout_us;
+                ESP_LOGI(TAG,"Wake word detected: Hi ESP (#%u), continuous commands, idle timeout 15 seconds",wake_count);
                 ui_show_status("Listening");
             }
         } else {
@@ -67,11 +68,14 @@ static void recognition_task(void *arg)
                     int id=r->command_id[0]; ++command_count;
                     ESP_LOGI(TAG,"COMMAND: id=%d text=%s probability=%.3f (#%u)",id,commands[id-1],r->prob[0],command_count);
                     ui_execute_command((voice_command_t)id,commands[id-1]);
-                    listening=false; cooldown=esp_timer_get_time()+500000;
+                    deadline=esp_timer_get_time()+idle_timeout_us;
+                    cooldown=esp_timer_get_time()+500000;
                     mn->clean(command_data);
                 }
             }
-            if (listening && (state==ESP_MN_STATE_TIMEOUT || esp_timer_get_time()>=deadline)) {
+            // Decoder timeouts do not end the continuous session.
+            if (state==ESP_MN_STATE_TIMEOUT) mn->clean(command_data);
+            if (listening && esp_timer_get_time()>=deadline) {
                 ESP_LOGI(TAG,"Command timeout; waiting for Hi ESP");
                 listening=false; mn->clean(command_data);
                 ui_show_status("Say Hi ESP");
@@ -89,7 +93,7 @@ static void recognition_task(void *arg)
 
 void app_main(void)
 {
-    ESP_LOGI(TAG,"XIAO offline voice commands v0.2");
+    ESP_LOGI(TAG,"XIAO offline voice commands v1.1 continuous");
     if (ui_init()!=ESP_OK) {ESP_LOGE(TAG,"LCD initialization failed"); return;}
     ui_show_status("Loading models");
     srmodel_list_t *models=esp_srmodel_init("model");

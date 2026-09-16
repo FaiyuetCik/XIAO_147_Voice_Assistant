@@ -1,4 +1,4 @@
-# XIAO 1.47 Voice Assistant
+# XIAO 1.47 Voice Assistant v1.1
 
 Offline English wake-word and command recognition with an LCD interface, built with ESP-IDF and ESP-SR for the XIAO ESP32-S3 Plus 1.47-inch JD9853A display board.
 
@@ -13,7 +13,7 @@ Offline English wake-word and command recognition with an LCD interface, built w
 - Wake with **Hi E S P**, then speak one of five English commands.
 - On-device WakeNet 9 (`wn9_hiesp`) and MultiNet 7 English (`mn7_en`); no network, cloud account, API key, or computer required during operation.
 - Home, color and information pages on a 172 × 320 LCD; the last recognized command stays visible.
-- One command per wake, with a roughly six-second listening window.
+- Continuous commands after one wake. Each successful recognition restarts a 15-second inactivity timer; the screen stays in `LISTENING` until timeout.
 - Tested hardware: XIAO ESP32-S3 Plus 1.47-inch JD9853A display board, 16 MB flash, 8 MB Octal PSRAM, and PDM microphone. Other 1.47-inch ESP boards are not automatically compatible: verify controller, pins and memory first.
 
 This is a standalone firmware application, not a general speech-to-text library. It does not provide free dictation, AI chat, keyboard/mouse control, touch navigation, or AFE noise reduction.
@@ -23,7 +23,7 @@ This is a standalone firmware application, not a general speech-to-text library.
 1. Power the board and wait for `SAY HI ESP`.
 2. Say “Hi E S P”: pronounce E, S and P as English letter names.
 3. Wait for `LISTENING`, then say a command from the table below.
-4. Wake the board again before each subsequent command. If no command is recognized within about six seconds, it returns to `SAY HI ESP`.
+4. Continue with another command without waking again, for example `Show red`, then `Show green`. Leave a short pause (at least about 0.5 seconds) between commands. After 15 seconds without a recognized command, it returns to `SAY HI ESP`; wake it again to start a new session.
 
 | Command | Action |
 | --- | --- |
@@ -81,7 +81,7 @@ To change commands, update the vocabulary in `main/main.c`, command IDs in `comp
 
 ### Validation and troubleshooting
 
-The owner confirmed on real hardware that all five commands, LCD text/colors, page navigation, return home and silent-wake timeout work. Serial logs also recorded all five actions in one continuous boot after the runtime fix. These are functional checks, not a measured accuracy benchmark; noise, distance and pronunciation can affect recognition.
+The previous single-command version was hardware-verified for all five commands, LCD text/colors, page navigation, return home and its six-second timeout. See STATUS.md for v1.1 continuous-session validation; these earlier tests do not validate the new timeout. Serial logs also recorded all five actions in one continuous boot after the runtime fix. These are functional checks, not a measured accuracy benchmark; noise, distance and pronunciation can affect recognition.
 
 - No response: wait for startup to finish, say the wake phrase first, and do not speak the command until `LISTENING` appears.
 - `Missing model` / `Model error`: check model selections and perform a full flash.
@@ -97,7 +97,7 @@ See [STATUS.md](STATUS.md) for the test record and [THIRD_PARTY_NOTICES.md](THIR
 - 说 **Hi E S P** 唤醒，再说五条英文命令之一。
 - 使用板端 WakeNet 9（`wn9_hiesp`）和 MultiNet 7 英文模型（`mn7_en`）；运行时不需要网络、云账号、API key 或电脑。
 - 172 × 320 LCD 提供主页、颜色页和信息页，保留最后一次成功识别的命令。
-- 每次唤醒执行一条命令，等待命令的时间约为 6 秒。
+- 一次唤醒后连续识别命令；每次识别成功重置 15 秒无命令计时，超时前屏幕保持 `LISTENING`。
 - 已测试：XIAO ESP32-S3 Plus 1.47 英寸 JD9853A 屏幕板，16 MB Flash、8 MB Octal PSRAM 和 PDM 麦克风。其他 1.47 英寸 ESP 屏幕板不保证兼容，请先核对屏幕控制器、引脚和内存。
 
 这是一个独立固件应用，不是通用语音转文字库。目前不支持自由听写、AI 对话、键鼠控制、触摸导航或 AFE 降噪，也不与 Pocket_AI_Terminal 集成。
@@ -107,7 +107,7 @@ See [STATUS.md](STATUS.md) for the test record and [THIRD_PARTY_NOTICES.md](THIR
 1. 上电，等待屏幕显示 `SAY HI ESP`。
 2. 说 “Hi E S P”：Hi 后面的 E、S、P 分别按英文字母名称读。
 3. 等待 `LISTENING`，再说下表中的命令。
-4. 每条命令前重新唤醒；约 6 秒没有识别到命令，会返回 `SAY HI ESP`。
+4. 可以直接继续说下一条命令，例如先 `Show red`，再 `Show green`，无需重复唤醒。命令之间短暂停顿（至少约 0.5 秒）；连续 15 秒未识别到命令才返回 `SAY HI ESP`，之后需重新唤醒。
 
 | 英文命令 | 实际功能 |
 | --- | --- |
@@ -161,7 +161,7 @@ idf.py -p COM33 flash monitor
 
 ### 实测与排查
 
-用户已在实机确认：五条命令、屏幕文字、红绿蓝色块、切页、返回主页和唤醒后静默超时均正常。修复后的串口日志也在同一次连续运行中记录了全部五条命令执行。这是功能验证，不是准确率测试；噪声、距离和发音仍会影响识别。
+上一版单命令模式已通过实机确认：五条命令、文字、色块、切页、返回主页和 6 秒超时均正常。v1.1 连续会话的验证状态见 STATUS.md，旧版测试不代表新版 15 秒超时已通过验证。修复后的串口日志也在同一次连续运行中记录了全部五条命令执行。这是功能验证，不是准确率测试；噪声、距离和发音仍会影响识别。
 
 - 没有响应：等待启动完成，先唤醒，看到 `LISTENING` 后再说命令。
 - 出现 `Missing model` / `Model error`：检查模型配置，完整烧录。

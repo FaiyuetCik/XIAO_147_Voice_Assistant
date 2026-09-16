@@ -96,7 +96,7 @@ static void render(const view_t *v)
     rect(0,0,W,38,0x2124); center(12,"XIAO VOICE",2,CYAN);
     center(52,v->status,strlen(v->status)>14?1:2,WHITE);
     if (v->page == 0) {
-        center(93,"SAY HI ESP",2,CYAN);
+        center(93,strcmp(v->status,"Listening")==0?"SAY COMMAND":"SAY HI ESP",2,CYAN);
         const char *items[]={"SHOW RED","SHOW GREEN","SHOW BLUE","NEXT PAGE","GO HOME"};
         for (int i=0;i<5;++i) text(18,133+i*23,items[i],2,WHITE);
     } else if (v->page == 1) {
@@ -175,6 +175,6 @@ void ui_execute_command(voice_command_t id, const char *s)
     else return;
     ++view.count;
     snprintf(view.last,sizeof(view.last),"%s",s);
-    ui_show_status("Say Hi ESP");
+    ui_show_status("Listening");
     ESP_LOGI(TAG,"ACTION: %s page=%d",s,view.page);
 }

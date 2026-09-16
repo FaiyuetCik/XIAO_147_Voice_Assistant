@@ -1,39 +1,25 @@
 # Validation record / 验证记录
 
+## v1.1 — Continuous commands / 连续命令
+
 Updated / 更新日期: 2026-09-16
 
-## Hardware-verified / 已通过实机验证
+- Implemented: one wake starts a continuous session; each successful command resets the 15-second inactivity timer. Decoder timeouts reset only the decoder, not the session. / 一次唤醒开启连续会话，每次成功命令重置 15 秒无命令计时；模型内部超时仅重置解码器，不退出会话。
+- LCD stays in LISTENING after actions; the active home page says SAY COMMAND. / 执行动作后保持 LISTENING，会话中的主页提示 SAY COMMAND。
+- A 500 ms post-command guard is retained; pause briefly between commands. / 保留命令后 500 ms 间隔，请在两条命令之间短暂停顿。
+- Build passed with ESP-IDF 5.3.2, ESP-SR 2.5.3 and ESP-DL 3.3.10. Application: 2,033,808 bytes, about 3% partition space remaining. / 编译通过，应用为 2,033,808 字节，分区剩余约 3%。
+- Application flashed to the connected board and flash hash verified. Existing models and partitions were unchanged. / 应用已烧录并校验，模型与分区未更改。
+- Serial boot confirmed v1.1, LCD initialization, both models, five commands and microphone READY. / 串口确认 v1.1 启动、LCD 初始化、双模型、五条命令和麦克风就绪。
+- **Pending:** user confirmation and serial evidence of multiple commands after a single wake, timer reset after commands, 15-second idle exit and re-wake. These are not yet marked hardware-verified. / **待验证：** 单次唤醒多命令、命令后计时重置、15 秒无命令退出及再次唤醒；尚未标为实机通过。
 
-ESP-IDF 5.3.2, ESP-SR 2.5.3, ESP-DL 3.3.10. XIAO ESP32-S3 Plus 1.47-inch JD9853A board; 16 MB flash, 8 MB PSRAM, 240 MHz CPU.
+## Previous single-command baseline / 上一版单命令基线
 
-- Full build and firmware/model flashing succeeded. / 编译及固件、模型烧录成功。
-- Both models initialized with 512-sample audio frames; all five commands registered. / 两个模型均以 512 采样点帧初始化，五条命令已加载。
-- Owner confirmed readable LCD text, red/green/blue blocks, Next page, Go home, and approximately six-second silent-wake timeout. / 用户确认文字、红绿蓝色块、切页、返回主页和约 6 秒静默超时均正常。
-- Serial logs recorded all five actions in one continuous boot without the earlier crash. / 同一次连续运行的串口日志记录全部五条动作，未再出现此前崩溃。
+The owner confirmed all five commands, LCD text, RGB blocks, page navigation, home return and the original six-second timeout. Serial logs recorded all five commands in one continuous boot without the earlier WakeNet-clean crash. These tests apply to the previous single-command behavior, not v1.1's continuous session.
 
-| Uptime (ms) | Command | Destination |
-| --- | --- | --- |
-| 12848 | show red | Color |
-| 59378 | show green | Color |
-| 72208 | show blue | Color |
-| 82728 | next page | Information |
-| 92468 | go home | Home |
+用户确认旧版五条命令、文字、三色色块、切页、返回主页及原 6 秒超时正常；同一次连续运行的串口记录全部五条命令，未再出现 WakeNet clean 崩溃。这些验证针对旧版单命令模式，不代表 v1.1 连续会话已验证。
 
-A later wake at 116668 ms timed out at 122698 ms (6.03 seconds). At 123008 ms, health logging reported seven wakes, five successful commands and 5,239,268 bytes of free heap including PSRAM. Functional checks do not establish recognition accuracy or long-duration reliability.
+## Limits / 限制
 
-后续在 116668 ms 唤醒，122698 ms 超时返回（6.03 秒）。123008 ms 健康日志记录 7 次唤醒、5 次命令成功，含 PSRAM 的空闲堆为 5,239,268 字节。上述功能测试不代表准确率或长期稳定性测试。
+Fixed vocabulary only; no free dictation, AFE noise reduction, touch navigation or computer control. Controlled accuracy, false-trigger, noise and endurance tests remain open. The application partition should be enlarged before substantial feature additions, with the relocated model partition reflashed.
 
-## Runtime fix / 运行时修复
-
-The initial build crashed after `show red` inside WakeNet `model_clean` → `dl_convq_queue_bzero` (LoadProhibited). The tested version avoids this callback, continuously feeds WakeNet, and accepts wake events only while idle. MultiNet is cleaned between command sessions.
-
-初版在识别 `show red` 后进入 WakeNet clean 回调时崩溃。已验证版本避开该回调，持续向 WakeNet 输入音频，仅在空闲状态接受唤醒；命令会话间保留 MultiNet clean。
-
-## Tested artifacts and limits / 已测试产物与限制
-
-- Application: 2,033,712 bytes; SHA256 `17F93902B7609C9B7D6E65E16206B898CA8DA847BEC1746AA627F1DF7A86BA4B`.
-- Model pack: 3,052,231 bytes; SHA256 `43CF83104AD227722C6E4BEF844E52D78F9C0A742A0965BF3FDFA7AE43C9C942`.
-- These identify the tested local artifacts; fresh builds may differ. Binaries are not included in this repository. / 哈希标识已测试的本地产物，重新构建可能不同；仓库未包含二进制。
-- The 2 MB application partition has about 3% free. / 2 MB 应用分区仅剩约 3%。
-- No AFE noise reduction, free dictation, touch navigation or computer control. / 无 AFE 降噪、自由听写、触摸导航或电脑控制。
-- Controlled accuracy, false-trigger, noisy-environment and endurance testing remain open. / 尚未完成受控准确率、误唤醒、噪声环境和长时间运行测试。
+仅固定词表；无自由听写、AFE 降噪、触摸导航或电脑控制。尚未完成受控准确率、误触发、噪声及长时间运行测试。增加较多功能前应扩大应用分区，并重新烧录移动后的模型分区。
