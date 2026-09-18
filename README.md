@@ -5,6 +5,13 @@ Offline English wake-word and command recognition with an LCD interface, built w
 基于 ESP-IDF 与 ESP-SR，为 XIAO ESP32-S3 Plus 1.47 英寸 JD9853A 屏幕板开发的离线英文唤醒与命令识别应用。
 
 [English](#english) | [中文](#中文)
+## Demo
+
+Watch the board respond to the English wake word and commands in the demo video:
+
+<video controls width="640" src="https://github.com/FaiyuetCik/XIAO_147_Voice_Assistant/raw/main/demo/show.mp4"></video>
+
+[Download or open the demo video](demo/show.mp4)
 
 ## English
 
