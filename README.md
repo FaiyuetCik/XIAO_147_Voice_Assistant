@@ -7,12 +7,11 @@ Offline English wake-word and command recognition with an LCD interface, built w
 [English](#english) | [中文](#中文)
 ## Demo
 
-Watch the board respond to the English wake word and commands in the demo video:
+Click the preview to open a dedicated page with a play button:
 
-<video controls width="640" src="https://github.com/FaiyuetCik/XIAO_147_Voice_Assistant/raw/main/demo/show.mp4"></video>
+[![Open the playable demo](https://faiyuetcik.github.io/XIAO_147_Voice_Assistant/poster.jpg)](https://faiyuetcik.github.io/XIAO_147_Voice_Assistant/)
 
-[Download or open the demo video](demo/show.mp4)
-
+The video is also stored at [`demo/show.mp4`](demo/show.mp4). GitHub sanitizes `<video>` tags in repository README files, so the Pages preview provides the inline player while keeping the MP4 in this repository.
 ## English
 
 ### Features and hardware
