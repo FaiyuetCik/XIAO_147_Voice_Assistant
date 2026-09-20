@@ -94,7 +94,7 @@ The previous single-command version was hardware-verified for all five commands,
 - No color change: inspect serial `COMMAND` and `ACTION` logs to distinguish recognition from display issues; verify the exact board and pin map.
 - The initial build crashed in the WakeNet clean callback after recognizing a command. This version avoids that callback, keeps WakeNet continuously fed and accepts wake events only while idle. Do not reintroduce that reset without validating it against the pinned model/runtime.
 
-See [STATUS.md](STATUS.md) for the test record and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for third-party attribution. Downloaded dependencies and model binaries are not vendored; their upstream licenses still apply. No project-wide license is granted by the third-party notice alone.
+See [STATUS.md](STATUS.md) for the test record and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for third-party attribution. Downloaded dependencies and model binaries are not vendored; their upstream licenses still apply. The project source code in this repository is licensed under the MIT License; see [LICENSE](LICENSE). ESP-SR, ESP-DL, and the speech models remain subject to their respective upstream licenses.
 
 ## 中文
 
