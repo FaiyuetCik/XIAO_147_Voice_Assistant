@@ -28,8 +28,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## ESP-SR and dependencies
+## Espressif components
 
-ESP-SR 2.5.3, ESP-DL 3.3.10 and their managed dependencies retain their own
-licenses in `managed_components`. Speech models and prebuilt libraries must
-be distributed subject to the respective Espressif license files.
+This project uses the following Espressif components through the ESP-IDF
+Component Registry:
+
+- [ESP-SR 2.5.3](https://components.espressif.com/components/espressif/esp-sr) -
+  Espressif MIT License.
+- [ESP-DL 3.3.10](https://components.espressif.com/components/espressif/esp-dl) -
+  MIT License.
+- [ESP-DSP 1.8.0](https://components.espressif.com/components/espressif/esp-dsp) -
+  Apache License 2.0.
+- [cJSON 1.7.19~2](https://components.espressif.com/components/espressif/cjson) -
+  MIT License.
+- [dl_fft 0.7.0](https://components.espressif.com/components/espressif/dl_fft) -
+  MIT License.
+- [esp_new_jpeg 1.0.2](https://components.espressif.com/components/espressif/esp_new_jpeg) -
+  Espressif custom license.
+
+The component versions are pinned in dependencies.lock. The downloaded
+component sources and their original license files are under
+managed_components in a local build checkout; that directory is ignored by
+Git and is not part of this repository. The original license terms and
+copyright notices remain applicable when redistributing source code, firmware,
+speech models, or prebuilt libraries.
+
+The project source code in this repository is licensed separately under the
+MIT License in the root LICENSE file. These third-party components, speech
+models, and prebuilt libraries are not relicensed under the project's MIT
+License.
