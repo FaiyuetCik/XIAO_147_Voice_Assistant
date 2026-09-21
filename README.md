@@ -12,6 +12,9 @@ Click the preview to open a dedicated page with a play button:
 [![Open the playable demo](https://faiyuetcik.github.io/XIAO_147_Voice_Assistant/poster.jpg)](https://faiyuetcik.github.io/XIAO_147_Voice_Assistant/)
 
 The video is also stored at [`demo/show.mp4`](demo/show.mp4). GitHub sanitizes `<video>` tags in repository README files, so the Pages preview provides the inline player while keeping the MP4 in this repository.
+
+If you want to try replicating on the same hardware as mine, you can check out this link:
+https://www.seeedstudio.com/1-47-Inch-Touch-Display-Powered-by-XIAO-ESP32-S3-Plus-p-6996.html
 ## English
 
 ### Features and hardware
